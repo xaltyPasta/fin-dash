@@ -1,15 +1,59 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+
+  schemas  = ["fin_dash"]
+}
+
+enum Role {
+  VIEWER
+  ANALYST
+  ADMIN
+
+  @@schema("fin_dash")
+}
+
+enum RecordType {
+  INCOME
+  EXPENSE
+
+  @@schema("fin_dash")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  password  String
+  role      Role
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  records   FinancialRecord[]
+
+  @@schema("fin_dash")
+}
+
+model FinancialRecord {
+  id        String   @id @default(uuid())
+  amount    Float
+  type      RecordType
+  category  String
+  date      DateTime
+  notes     String?
+  userId    String
+
+  user      User     @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([type])
+  @@index([date])
+
+  @@schema("fin_dash")
 }
