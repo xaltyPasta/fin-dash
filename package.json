@@ -1,16 +1,21 @@
 {
   "name": "finance-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/server.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "build": "prisma generate",
-    "start": "node dist/server.js"
+    "build": "npx prisma generate && npx tsc",
+    "start": "node dist/src/server.js",
+    "test": "jest --forceExit --detectOpenHandles",
+    "test:watch": "jest --watch --forceExit --detectOpenHandles",
+    "db:migrate": "npx prisma migrate dev",
+    "db:push": "npx prisma db push",
+    "db:studio": "npx prisma studio"
   },
-  "keywords": [],
+  "keywords": ["finance", "dashboard", "api", "backend"],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Finance Dashboard Backend API with role-based access control",
   "dependencies": {
     "@prisma/client": "6.19.3",
     "bcrypt": "^6.0.0",
@@ -24,9 +29,12 @@
     "@types/bcrypt": "^6.0.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.5.0",
+    "jest": "^30.0.0",
     "prisma": "^6.19.3",
+    "ts-jest": "^29.3.4",
     "ts-node-dev": "^2.0.0",
     "typescript": "^6.0.2"
   }
